@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.Scripts.LiveObjects;
 using Cinemachine;
+using UnityEngine.InputSystem;
 
 namespace Game.Scripts.Player
 {
@@ -21,7 +22,7 @@ namespace Game.Scripts.Player
         private CinemachineVirtualCamera _followCam;
         [SerializeField]
         private GameObject _model;
-
+        private PlayerInputMap _input;
 
         private void OnEnable()
         {
@@ -38,6 +39,8 @@ namespace Game.Scripts.Player
         private void Start()
         {
             _controller = GetComponent<CharacterController>();
+            _input = new PlayerInputMap();
+            _input.Player.Enable();
 
             if (_controller == null)
                 Debug.LogError("No Character Controller Present");
@@ -58,12 +61,13 @@ namespace Game.Scripts.Player
         private void CalcutateMovement()
         {
             _playerGrounded = _controller.isGrounded;
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
+            //float h = Input.GetAxisRaw("Horizontal");
+            //float v = Input.GetAxisRaw("Vertical");
+            var move = _input.Player.Movement.ReadValue<Vector2>();
 
-            transform.Rotate(transform.up, h);
+            transform.Rotate(transform.up, move.x);
 
-            var direction = transform.forward * v;
+            var direction = transform.forward * move.y;
             var velocity = direction * _speed;
 
 
