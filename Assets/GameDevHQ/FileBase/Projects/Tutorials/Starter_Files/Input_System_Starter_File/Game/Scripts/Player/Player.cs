@@ -23,6 +23,7 @@ namespace Game.Scripts.Player
         [SerializeField]
         private GameObject _model;
         private PlayerInputMap _input;
+        [SerializeField] private InputActionRebindingExtensions.RebindingOperation _inputa;
 
         private void OnEnable()
         {

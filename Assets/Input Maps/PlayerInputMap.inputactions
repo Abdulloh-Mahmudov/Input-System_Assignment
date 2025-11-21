@@ -380,6 +380,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "InteractableZone",
+            "id": "78118bea-7d1c-4999-be6d-2638505c3f8b",
+            "actions": [
+                {
+                    "name": "ZoneKey",
+                    "type": "Button",
+                    "id": "394439cf-701b-4e3f-8d07-e40673152be0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold(duration=1)",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "eb8a5445-585e-4194-aaa0-eba1bb5a7629",
+                    "path": "<Keyboard>/j",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ZoneKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

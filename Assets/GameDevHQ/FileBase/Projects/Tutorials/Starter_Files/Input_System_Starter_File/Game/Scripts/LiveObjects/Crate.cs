@@ -59,7 +59,11 @@ namespace Game.Scripts.LiveObjects
         {
             int rng = Random.Range(0, _brakeOff.Count);
             _brakeOff[rng].constraints = RigidbodyConstraints.None;
-            _brakeOff[rng].AddForce(new Vector3(1f, 1f, 1f), ForceMode.Force);
+            //Old Input system
+            //_brakeOff[rng].AddForce(new Vector3(1f, 1f, 1f), ForceMode.Force);
+
+            //New input system with adjustable AddForce
+            _brakeOff[rng].AddForce(new Vector3(1f, 1f, 1f) * ((float)_interactableZone._holdTimer), ForceMode.Force);
             _brakeOff.Remove(_brakeOff[rng]);            
         }
 

@@ -402,6 +402,34 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""InteractableZone"",
+            ""id"": ""78118bea-7d1c-4999-be6d-2638505c3f8b"",
+            ""actions"": [
+                {
+                    ""name"": ""ZoneKey"",
+                    ""type"": ""Button"",
+                    ""id"": ""394439cf-701b-4e3f-8d07-e40673152be0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold(duration=1)"",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""eb8a5445-585e-4194-aaa0-eba1bb5a7629"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZoneKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -421,6 +449,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         m_ForkLift_LiftUp = m_ForkLift.FindAction("LiftUp", throwIfNotFound: true);
         m_ForkLift_LiftDown = m_ForkLift.FindAction("LiftDown", throwIfNotFound: true);
         m_ForkLift_Escape = m_ForkLift.FindAction("Escape", throwIfNotFound: true);
+        // InteractableZone
+        m_InteractableZone = asset.FindActionMap("InteractableZone", throwIfNotFound: true);
+        m_InteractableZone_ZoneKey = m_InteractableZone.FindAction("ZoneKey", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -664,6 +695,52 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         }
     }
     public ForkLiftActions @ForkLift => new ForkLiftActions(this);
+
+    // InteractableZone
+    private readonly InputActionMap m_InteractableZone;
+    private List<IInteractableZoneActions> m_InteractableZoneActionsCallbackInterfaces = new List<IInteractableZoneActions>();
+    private readonly InputAction m_InteractableZone_ZoneKey;
+    public struct InteractableZoneActions
+    {
+        private @PlayerInputMap m_Wrapper;
+        public InteractableZoneActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ZoneKey => m_Wrapper.m_InteractableZone_ZoneKey;
+        public InputActionMap Get() { return m_Wrapper.m_InteractableZone; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(InteractableZoneActions set) { return set.Get(); }
+        public void AddCallbacks(IInteractableZoneActions instance)
+        {
+            if (instance == null || m_Wrapper.m_InteractableZoneActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InteractableZoneActionsCallbackInterfaces.Add(instance);
+            @ZoneKey.started += instance.OnZoneKey;
+            @ZoneKey.performed += instance.OnZoneKey;
+            @ZoneKey.canceled += instance.OnZoneKey;
+        }
+
+        private void UnregisterCallbacks(IInteractableZoneActions instance)
+        {
+            @ZoneKey.started -= instance.OnZoneKey;
+            @ZoneKey.performed -= instance.OnZoneKey;
+            @ZoneKey.canceled -= instance.OnZoneKey;
+        }
+
+        public void RemoveCallbacks(IInteractableZoneActions instance)
+        {
+            if (m_Wrapper.m_InteractableZoneActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IInteractableZoneActions instance)
+        {
+            foreach (var item in m_Wrapper.m_InteractableZoneActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_InteractableZoneActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public InteractableZoneActions @InteractableZone => new InteractableZoneActions(this);
     public interface IPlayerActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -681,5 +758,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         void OnLiftUp(InputAction.CallbackContext context);
         void OnLiftDown(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
+    }
+    public interface IInteractableZoneActions
+    {
+        void OnZoneKey(InputAction.CallbackContext context);
     }
 }
