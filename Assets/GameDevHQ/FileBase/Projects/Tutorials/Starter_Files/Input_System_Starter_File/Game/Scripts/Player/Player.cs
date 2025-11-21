@@ -35,13 +35,14 @@ namespace Game.Scripts.Player
             Forklift.onDriveModeEntered += HidePlayer;
             Drone.OnEnterFlightMode += ReleasePlayerControl;
             Drone.onExitFlightmode += ReturnPlayerControl;
+            //New Input system
+            _input = new PlayerInputMap();
+            _input.Player.Enable();
         } 
 
         private void Start()
         {
             _controller = GetComponent<CharacterController>();
-            _input = new PlayerInputMap();
-            _input.Player.Enable();
 
             if (_controller == null)
                 Debug.LogError("No Character Controller Present");
@@ -134,6 +135,7 @@ namespace Game.Scripts.Player
             Forklift.onDriveModeEntered -= HidePlayer;
             Drone.OnEnterFlightMode -= ReleasePlayerControl;
             Drone.onExitFlightmode -= ReturnPlayerControl;
+            _input.Player.Disable();
         }
 
     }

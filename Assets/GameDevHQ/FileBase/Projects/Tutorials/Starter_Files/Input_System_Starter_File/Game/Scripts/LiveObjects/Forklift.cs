@@ -30,28 +30,16 @@ namespace Game.Scripts.LiveObjects
             InteractableZone.onZoneInteractionComplete += EnterDriveMode;
             _input = new PlayerInputMap();
             _input.ForkLift.Enable();
-            _input.ForkLift.LiftUp.performed += LiftUp_performed;
-            _input.ForkLift.LiftDown.performed += LiftDown_performed;
             _input.ForkLift.Escape.performed += Escape_performed;
         }
 
+        //New Input System
         private void Escape_performed(InputAction.CallbackContext obj)
         {
             if (_inDriveMode == true)
             {
                     ExitDriveMode();
             }
-        }
-
-        //New Input system
-        private void LiftDown_performed(InputAction.CallbackContext obj)
-        {
-            LiftDownRoutine();
-        }
-
-        private void LiftUp_performed(InputAction.CallbackContext obj)
-        {
-            LiftUpRoutine();
         }
 
         private void EnterDriveMode(InteractableZone zone)
@@ -79,9 +67,10 @@ namespace Game.Scripts.LiveObjects
         {
             if (_inDriveMode == true)
             {
-                //Old Input system
-                //LiftControls();
+
+                LiftControls();
                 CalcutateMovement();
+                //Old Input System
                 //if (Input.GetKeyDown(KeyCode.Escape))
                 //  ExitDriveMode();
             }
@@ -123,9 +112,9 @@ namespace Game.Scripts.LiveObjects
         //Old Input system
         private void LiftControls()
         {
-            if (Input.GetKey(KeyCode.R))
+            if (_input.ForkLift.LiftUp.IsPressed()) 
                 LiftUpRoutine();
-            else if (Input.GetKey(KeyCode.T))
+            else if (_input.ForkLift.LiftDown.IsPressed())
                 LiftDownRoutine();
         }
 
@@ -156,6 +145,8 @@ namespace Game.Scripts.LiveObjects
         private void OnDisable()
         {
             InteractableZone.onZoneInteractionComplete -= EnterDriveMode;
+            _input.ForkLift.Escape.performed -= Escape_performed;
+            _input.ForkLift.Disable();
         }
 
     }

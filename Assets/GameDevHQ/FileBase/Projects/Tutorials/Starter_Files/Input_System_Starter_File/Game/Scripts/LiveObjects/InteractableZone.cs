@@ -84,50 +84,59 @@ namespace Game.Scripts.LiveObjects
         //New Input System
         private void ZoneKey_started(InputAction.CallbackContext obj)
         {
-            switch (_zoneType)
+            if (_inZone == true)
             {
-                case ZoneType.Collectable:
-                    if (_itemsCollected == false)
-                    {
-                        CollectItems();
-                        _itemsCollected = true;
-                        UIManager.Instance.DisplayInteractableZoneMessage(false);
-                    }
-                    break;
+                switch (_zoneType)
+                {
+                    case ZoneType.Collectable:
+                        if (_itemsCollected == false)
+                        {
+                            CollectItems();
+                            _itemsCollected = true;
+                            UIManager.Instance.DisplayInteractableZoneMessage(false);
+                        }
+                        break;
 
-                case ZoneType.Action:
-                    if (_actionPerformed == false)
-                    {
-                        PerformAction();
-                        _actionPerformed = true;
-                        UIManager.Instance.DisplayInteractableZoneMessage(false);
-                    }
-                    break;
+                    case ZoneType.Action:
+                        if (_actionPerformed == false)
+                        {
+                            PerformAction();
+                            _actionPerformed = true;
+                            UIManager.Instance.DisplayInteractableZoneMessage(false);
+                        }
+                        break;
+                }
             }
         }
 
         private void ZoneKey_performed(InputAction.CallbackContext obj)
         {
-            if (_inHoldState == false)
+            if (_inZone == true)
             {
-                _inHoldState = true;
-
-                switch (_zoneType)
+                if (_inHoldState == false)
                 {
-                    case ZoneType.HoldAction:
-                        PerformHoldAction();
-                        break;
+                    _inHoldState = true;
+
+                    switch (_zoneType)
+                    {
+                        case ZoneType.HoldAction:
+                            PerformHoldAction();
+                            break;
+                    }
                 }
             }
         }
 
         private void ZoneKey_canceled(InputAction.CallbackContext obj)
         {
-            _holdTimer = obj.duration;
-            if (_inHoldState == true)
+            if (_inZone == true)
             {
-                _inHoldState = false;
-                onHoldEnded?.Invoke(_zoneID);
+                _holdTimer = obj.duration;
+                if (_inHoldState == true)
+                {
+                    _inHoldState = false;
+                    onHoldEnded?.Invoke(_zoneID);
+                }
             }
         }
 

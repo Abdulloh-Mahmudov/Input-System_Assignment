@@ -167,6 +167,8 @@ namespace Game.Scripts.LiveObjects
         private void OnDisable()
         {
             InteractableZone.onZoneInteractionComplete -= EnterFlightMode;
+            _input.Drone.Escape.performed -= Escape_performed;
+            _input.Drone.Disable();
         }
     }
 }
